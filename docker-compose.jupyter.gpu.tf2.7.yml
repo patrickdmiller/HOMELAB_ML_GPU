@@ -1,1 +1,22 @@
-../app_jupyter_vanilla/docker-compose.yml
+version: "3.8"
+services:
+  gpu-jupyter:
+    image: tensorflow/tensorflow:2.7.0-gpu-jupyter
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities:
+              - gpu
+    ports:
+      - 80:8888
+    volumes:
+      - /app/data:/tf/notebooks
+    environment:
+      GRANT_SUDO: "yes"
+      JUPYTER_ENABLE_LAB: "yes"
+      NB_UID: ${JUPYTER_UID:-1000}
+      NB_GID: ${JUPYTER_GID:-1000}
+    # enable sudo permissions
+    user:
+      "root"

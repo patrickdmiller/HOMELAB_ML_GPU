@@ -1,1 +1,23 @@
-../app/docker-compose.yml
+version: "3.8"
+services:
+  gpu-jupyter:
+    image: cschranz/gpu-jupyter:v1.4_cuda-11.0_ubuntu-20.04_python-only
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities:
+              - gpu
+    ports:
+      - 80:8888
+    volumes:
+      - /app/data:/home/jovyan/work
+    environment:
+      GRANT_SUDO: "yes"
+      JUPYTER_ENABLE_LAB: "yes"
+      NB_UID: ${JUPYTER_UID:-1000}
+      NB_GID: ${JUPYTER_GID:-1000}
+    # enable sudo permissions
+    user:
+      "root"
+    restart: always
